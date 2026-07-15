@@ -1,0 +1,8 @@
+{
+  "name": "jostum/id-card-report-system",
+  "description": "JoSTUM ID card reporting and PDF preview system using DOMPDF.",
+  "type": "project",
+  "require": {
+    "dompdf/dompdf": "^3.1"
+  }
+}
