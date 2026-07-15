@@ -2322,7 +2322,7 @@ function configure_dompdf_options(): Dompdf\Options
     $options->set('fontDir', $fontPath);
     $options->set('fontCache', $fontPath);
     $options->set('chroot', dirname(__DIR__));
-    $options->setDefaultFont('DejaVu Sans');
+    $options->setDefaultFont('Helvetica');
 
     return $options;
 }

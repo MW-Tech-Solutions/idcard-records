@@ -54,8 +54,9 @@ record_printing_date_ensure_columns($pdo);
 record_printing_date_capture($pdo);
 
 if ($action === 'pdf') {
-    ini_set('memory_limit', '2048M');
-    set_time_limit(900);
+    @ini_set('memory_limit', '2048M');
+    @set_time_limit(900);
+    @ini_set('max_execution_time', '900');
 
     register_shutdown_function(static function (): void {
         $error = error_get_last();

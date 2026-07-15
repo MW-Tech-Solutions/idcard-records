@@ -16,7 +16,7 @@ return [
         'report_tagline' => 'Styled ID card records reporting for staff and students',
     ],
     'pdf' => [
-        'max_records' => 5000,
+        'max_records' => 10000,
     ],
     'mail' => [
         'mailer' => 'smtp',
