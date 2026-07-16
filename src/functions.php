@@ -2318,6 +2318,7 @@ function configure_dompdf_options(): Dompdf\Options
     $options = new Dompdf\Options();
     $options->set('isRemoteEnabled', false);
     $options->set('isHtml5ParserEnabled', true);
+    $options->set('isFontSubsettingEnabled', false);
     $options->set('tempDir', $tempPath);
     $options->set('fontDir', $fontPath);
     $options->set('fontCache', $fontPath);

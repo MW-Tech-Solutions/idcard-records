@@ -1,8 +1,10 @@
 <?php
 declare(strict_types=1);
 
-$previewUrl = 'index.php?' . report_query_string($filters, ['action' => 'pdf']);
-$downloadUrl = 'index.php?' . report_query_string($filters, ['action' => 'pdf', 'download' => '1']);
+$previewUrl = 'index.php?' . report_query_string($filters, ['action' => 'pdf', 'pdf_mode' => 'detailed']);
+$downloadUrl = 'index.php?' . report_query_string($filters, ['action' => 'pdf', 'pdf_mode' => 'detailed', 'download' => '1']);
+$previewSummaryUrl = 'index.php?' . report_query_string($filters, ['action' => 'pdf', 'pdf_mode' => 'summary']);
+$downloadSummaryUrl = 'index.php?' . report_query_string($filters, ['action' => 'pdf', 'pdf_mode' => 'summary', 'download' => '1']);
 $pdfRecordCount = min(count($records), $pdfRowLimit);
 $pdfLimitReached = count($records) > $pdfRowLimit;
 $statusOptions = [
@@ -309,7 +311,15 @@ $mailQueueStats = $mailQueueStats ?? ['queued' => 0, 'processing' => 0, 'sent' =
                     <span class="badge rounded-pill text-bg-light text-dark border px-3 py-2">
                         <i class="bi bi-person-circle me-1"></i><?= htmlspecialchars((string) ($user['name'] ?? 'Admin')) ?>
                     </span>
-                    <a class="btn btn-outline-primary" href="<?= htmlspecialchars($previewUrl) ?>" target="_blank"><i class="bi bi-eye me-2"></i>Preview</a>
+                    <div class="dropdown">
+                        <button class="btn btn-outline-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-eye me-2"></i>Preview PDF
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="<?= htmlspecialchars($previewUrl) ?>" target="_blank"><i class="bi bi-file-earmark-pdf me-2"></i>Detailed (Landscape)</a></li>
+                            <li><a class="dropdown-item" href="<?= htmlspecialchars($previewSummaryUrl) ?>" target="_blank"><i class="bi bi-file-earmark-text me-2"></i>Summary (Portrait)</a></li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </header>
@@ -365,8 +375,24 @@ $mailQueueStats = $mailQueueStats ?? ['queued' => 0, 'processing' => 0, 'sent' =
                     </p>
                 </div>
                 <div class="d-flex flex-wrap gap-2">
-                    <a class="btn btn-outline-primary btn-lg" href="<?= htmlspecialchars($previewUrl) ?>" target="_blank"><i class="bi bi-eye me-2"></i>Preview PDF</a>
-                    <a class="btn btn-primary btn-lg" href="<?= htmlspecialchars($downloadUrl) ?>" target="_blank"><i class="bi bi-file-earmark-pdf me-2"></i>Download</a>
+                    <div class="dropdown">
+                        <button class="btn btn-outline-primary btn-lg dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-eye me-2"></i>Preview PDF
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="<?= htmlspecialchars($previewUrl) ?>" target="_blank"><i class="bi bi-file-earmark-pdf me-2"></i>Detailed (Landscape)</a></li>
+                            <li><a class="dropdown-item" href="<?= htmlspecialchars($previewSummaryUrl) ?>" target="_blank"><i class="bi bi-file-earmark-text me-2"></i>Summary (Portrait)</a></li>
+                        </ul>
+                    </div>
+                    <div class="dropdown">
+                        <button class="btn btn-primary btn-lg dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-file-earmark-pdf me-2"></i>Download
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="<?= htmlspecialchars($downloadUrl) ?>" target="_blank"><i class="bi bi-file-earmark-pdf me-2"></i>Detailed (Landscape)</a></li>
+                            <li><a class="dropdown-item" href="<?= htmlspecialchars($downloadSummaryUrl) ?>" target="_blank"><i class="bi bi-file-earmark-text me-2"></i>Summary (Portrait)</a></li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </section>
@@ -458,8 +484,24 @@ $mailQueueStats = $mailQueueStats ?? ['queued' => 0, 'processing' => 0, 'sent' =
                         </p>
                     </div>
                     <div class="d-flex flex-wrap gap-2">
-                        <a class="btn btn-outline-primary" href="<?= htmlspecialchars($previewUrl) ?>" target="_blank"><i class="bi bi-eye me-2"></i>Preview</a>
-                        <a class="btn btn-primary" href="<?= htmlspecialchars($downloadUrl) ?>" target="_blank"><i class="bi bi-printer me-2"></i>Print / Download</a>
+                        <div class="dropdown">
+                            <button class="btn btn-outline-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bi bi-eye me-2"></i>Preview
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><a class="dropdown-item" href="<?= htmlspecialchars($previewUrl) ?>" target="_blank"><i class="bi bi-file-earmark-pdf me-2"></i>Detailed (Landscape)</a></li>
+                                <li><a class="dropdown-item" href="<?= htmlspecialchars($previewSummaryUrl) ?>" target="_blank"><i class="bi bi-file-earmark-text me-2"></i>Summary (Portrait)</a></li>
+                            </ul>
+                        </div>
+                        <div class="dropdown">
+                            <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bi bi-printer me-2"></i>Print / Download
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><a class="dropdown-item" href="<?= htmlspecialchars($downloadUrl) ?>" target="_blank"><i class="bi bi-file-earmark-pdf me-2"></i>Detailed (Landscape)</a></li>
+                                <li><a class="dropdown-item" href="<?= htmlspecialchars($downloadSummaryUrl) ?>" target="_blank"><i class="bi bi-file-earmark-text me-2"></i>Summary (Portrait)</a></li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
 

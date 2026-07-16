@@ -1,6 +1,8 @@
 <?php
 declare(strict_types=1);
 
+$pdfMode = $pdfMode ?? 'detailed';
+
 $formatValue = static function ($value): string {
     $value = trim((string) $value);
     return $value === '' ? 'N/A' : $value;
@@ -25,6 +27,22 @@ $formatDateTime = static function ($value): string {
     <meta charset="UTF-8">
     <title>JoSTUM ID Report</title>
     <style>
+        <?php if ($pdfMode === 'summary'): ?>
+        @page { margin: 12px 12px 15px; }
+        body { font-family: Helvetica, Arial, sans-serif; color: #000; font-size: 8px; margin: 0; }
+        h1 { font-size: 13px; text-align: center; margin: 0; }
+        h2 { margin-top: 2px; font-size: 10px; text-align: center; font-weight: normal; margin-bottom: 0; }
+        .department-title { margin: 4px 0 0; font-size: 11px; text-align: center; font-weight: bold; text-transform: uppercase; }
+        .meta { margin: 6px 0 5px; width: 100%; border-spacing: 0; border-top: 1px solid #000; border-left: 1px solid #000; }
+        .meta td { border-bottom: 1px solid #000; border-right: 1px solid #000; padding: 3px 4px; vertical-align: top; }
+        .meta strong { display: block; font-size: 7px; text-transform: uppercase; }
+        .notice { margin: 4px 0; border: 1.5px solid #000; padding: 4px; font-weight: bold; font-size: 7.5px; }
+        .records { width: 100%; border-spacing: 0; border-top: 1px solid #000; border-left: 1px solid #000; table-layout: fixed; }
+        .records th, .records td { border-bottom: 1px solid #000; border-right: 1px solid #000; padding: 2px 3px; vertical-align: top; }
+        .records th { font-size: 7.5px; text-align: left; font-weight: bold; }
+        .records td { font-size: 7.5px; }
+        .footer { margin-top: 5px; font-size: 7px; text-align: center; }
+        <?php else: ?>
         @page { margin: 18px 18px 22px; }
         body { font-family: Helvetica, Arial, sans-serif; color: #000; font-size: 9px; margin: 0; }
         h1, h2, p { margin: 0; }
@@ -40,6 +58,7 @@ $formatDateTime = static function ($value): string {
         .records th { font-size: 8px; text-align: left; font-weight: bold; }
         .records td { font-size: 8px; }
         .footer { margin-top: 8px; font-size: 8px; text-align: center; }
+        <?php endif; ?>
     </style>
 </head>
 <body>
@@ -72,35 +91,17 @@ $formatDateTime = static function ($value): string {
         <table class="records">
             <thead>
                 <tr>
-                    <th style="width: 3%;">S/N</th>
-                    <th style="width: 5%;">Type</th>
-                    <th style="width: 8%;">Identifier</th>
-                    <th style="width: 8%;">Reference</th>
-                    <th style="width: 17%;">Name</th>
-                    <th style="width: 17%;">Department</th>
-                    <th style="width: 15%;">Designation / Meta</th>
-                    <th style="width: 8%;">Request Status</th>
-                    <th style="width: 5%;">Submitted</th>
-                    <th style="width: 5%;">Printed</th>
-                    <th style="width: 5%;">Printed Date</th>
-                    <th style="width: 4%;">Issued</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td colspan="12">No records matched the selected filters.</td>
-                </tr>
-            </tbody>
-        </table>
-    <?php else: ?>
-        <?php
-        $chunkSize = 200;
-        $recordChunks = array_chunk($records, $chunkSize, true);
-        foreach ($recordChunks as $chunkIndex => $chunkRecords):
-        ?>
-            <table class="records" style="<?= $chunkIndex > 0 ? 'page-break-before: always; margin-top: 15px;' : '' ?>">
-                <thead>
-                    <tr>
+                    <?php if ($pdfMode === 'summary'): ?>
+                        <th style="width: 4%;">S/N</th>
+                        <th style="width: 12%;">Identifier</th>
+                        <th style="width: 22%;">Name</th>
+                        <th style="width: 22%;">Department</th>
+                        <th style="width: 15%;">Designation / Meta</th>
+                        <th style="width: 7%;">Request Status</th>
+                        <th style="width: 5%;">Submitted</th>
+                        <th style="width: 5%;">Printed</th>
+                        <th style="width: 8%;">Printed Date</th>
+                    <?php else: ?>
                         <th style="width: 3%;">S/N</th>
                         <th style="width: 5%;">Type</th>
                         <th style="width: 8%;">Identifier</th>
@@ -113,23 +114,76 @@ $formatDateTime = static function ($value): string {
                         <th style="width: 5%;">Printed</th>
                         <th style="width: 5%;">Printed Date</th>
                         <th style="width: 4%;">Issued</th>
+                    <?php endif; ?>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td colspan="<?= $pdfMode === 'summary' ? '9' : '12' ?>">No records matched the selected filters.</td>
+                </tr>
+            </tbody>
+        </table>
+    <?php else: ?>
+        <?php
+        $chunkSize = 200;
+        $recordChunks = array_chunk($records, $chunkSize, true);
+        foreach ($recordChunks as $chunkIndex => $chunkRecords):
+        ?>
+            <table class="records" style="<?= $chunkIndex > 0 ? 'page-break-before: always; margin-top: 15px;' : '' ?>">
+                <thead>
+                    <tr>
+                        <?php if ($pdfMode === 'summary'): ?>
+                            <th style="width: 4%;">S/N</th>
+                            <th style="width: 12%;">Identifier</th>
+                            <th style="width: 22%;">Name</th>
+                            <th style="width: 22%;">Department</th>
+                            <th style="width: 15%;">Designation / Meta</th>
+                            <th style="width: 7%;">Request Status</th>
+                            <th style="width: 5%;">Submitted</th>
+                            <th style="width: 5%;">Printed</th>
+                            <th style="width: 8%;">Printed Date</th>
+                        <?php else: ?>
+                            <th style="width: 3%;">S/N</th>
+                            <th style="width: 5%;">Type</th>
+                            <th style="width: 8%;">Identifier</th>
+                            <th style="width: 8%;">Reference</th>
+                            <th style="width: 17%;">Name</th>
+                            <th style="width: 17%;">Department</th>
+                            <th style="width: 15%;">Designation / Meta</th>
+                            <th style="width: 8%;">Request Status</th>
+                            <th style="width: 5%;">Submitted</th>
+                            <th style="width: 5%;">Printed</th>
+                            <th style="width: 5%;">Printed Date</th>
+                            <th style="width: 4%;">Issued</th>
+                        <?php endif; ?>
                     </tr>
                 </thead>
                 <tbody>
                 <?php foreach ($chunkRecords as $index => $record): ?>
                     <tr>
                         <td><?= number_format($index + 1) ?></td>
-                        <td><?= htmlspecialchars($formatValue($record['record_type'])) ?></td>
-                        <td><?= htmlspecialchars($formatValue($record['primary_identifier'])) ?></td>
-                        <td><?= htmlspecialchars($formatValue($record['reference_number'])) ?></td>
-                        <td><?= htmlspecialchars($formatValue($record['full_name'])) ?></td>
-                        <td><?= htmlspecialchars($formatValue($record['department'])) ?></td>
-                        <td><?= htmlspecialchars($formatValue($record['extra_meta'])) ?></td>
-                        <td><?= htmlspecialchars($formatValue($record['card_request_status'] ?: 'pending')) ?></td>
-                        <td><?= (int) $record['is_submitted'] === 1 ? 'Yes' : 'No' ?></td>
-                        <td><?= (int) $record['is_printed'] === 1 ? 'Yes' : 'No' ?></td>
-                        <td><?= (int) $record['is_printed'] === 1 ? htmlspecialchars($formatDateTime($record['card_printed_at'] ?? '')) : 'N/A' ?></td>
-                        <td><?= htmlspecialchars($formatValue($record['card_issued_at'] ?: 'Not issued')) ?></td>
+                        <?php if ($pdfMode === 'summary'): ?>
+                            <td><?= htmlspecialchars($formatValue($record['primary_identifier'])) ?></td>
+                            <td><?= htmlspecialchars($formatValue($record['full_name'])) ?></td>
+                            <td><?= htmlspecialchars($formatValue($record['department'])) ?></td>
+                            <td><?= htmlspecialchars($formatValue($record['extra_meta'])) ?></td>
+                            <td><?= htmlspecialchars($formatValue($record['card_request_status'] ?: 'pending')) ?></td>
+                            <td><?= (int) $record['is_submitted'] === 1 ? 'Yes' : 'No' ?></td>
+                            <td><?= (int) $record['is_printed'] === 1 ? 'Yes' : 'No' ?></td>
+                            <td><?= (int) $record['is_printed'] === 1 ? htmlspecialchars($formatDateTime($record['card_printed_at'] ?? '')) : 'N/A' ?></td>
+                        <?php else: ?>
+                            <td><?= htmlspecialchars($formatValue($record['record_type'])) ?></td>
+                            <td><?= htmlspecialchars($formatValue($record['primary_identifier'])) ?></td>
+                            <td><?= htmlspecialchars($formatValue($record['reference_number'])) ?></td>
+                            <td><?= htmlspecialchars($formatValue($record['full_name'])) ?></td>
+                            <td><?= htmlspecialchars($formatValue($record['department'])) ?></td>
+                            <td><?= htmlspecialchars($formatValue($record['extra_meta'])) ?></td>
+                            <td><?= htmlspecialchars($formatValue($record['card_request_status'] ?: 'pending')) ?></td>
+                            <td><?= (int) $record['is_submitted'] === 1 ? 'Yes' : 'No' ?></td>
+                            <td><?= (int) $record['is_printed'] === 1 ? 'Yes' : 'No' ?></td>
+                            <td><?= (int) $record['is_printed'] === 1 ? htmlspecialchars($formatDateTime($record['card_printed_at'] ?? '')) : 'N/A' ?></td>
+                            <td><?= htmlspecialchars($formatValue($record['card_issued_at'] ?: 'Not issued')) ?></td>
+                        <?php endif; ?>
                     </tr>
                 <?php endforeach; ?>
                 </tbody>

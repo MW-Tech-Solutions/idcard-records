@@ -1,0 +1,16 @@
+# Database & Environment configuration
+config.php
+
+# Composer dependencies
+/vendor/
+
+# Temporary storage & Logs
+/storage/dompdf/temp/
+/storage/pdf-error.log
+/storage/mail-worker-daemon.log
+
+# OS/Editor configs
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

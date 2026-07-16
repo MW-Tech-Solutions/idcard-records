@@ -93,6 +93,11 @@ if ($action === 'pdf') {
         : null;
 
     try {
+        $pdfMode = strtolower(trim((string) ($_GET['pdf_mode'] ?? 'detailed')));
+        if ($pdfMode !== 'summary') {
+            $pdfMode = 'detailed';
+        }
+
         $dompdf = new Dompdf\Dompdf(configure_dompdf_options());
         $html = render_view('pdf-report', [
             'config' => $config,
@@ -101,14 +106,16 @@ if ($action === 'pdf') {
             'summary' => $summary,
             'pdfNotice' => $pdfNotice,
             'generatedAt' => new DateTimeImmutable('now'),
+            'pdfMode' => $pdfMode,
         ]);
 
         $dompdf->loadHtml($html);
-        $dompdf->setPaper('A4', 'landscape');
+        $dompdf->setPaper('A4', $pdfMode === 'summary' ? 'portrait' : 'landscape');
         $dompdf->render();
 
         $filename = sprintf(
-            'jostum-id-report-%s-%s-%s.pdf',
+            'jostum-id-%sreport-%s-%s-%s.pdf',
+            $pdfMode === 'summary' ? 'summary-' : '',
             $filters['type'],
             $filters['status'],
             $filters['status_2'] ?? 'all'
