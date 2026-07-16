@@ -27,4 +27,3 @@ jobs:
           **/.github/**
           **/uploads/**
           **/uploads
-          **/config.php

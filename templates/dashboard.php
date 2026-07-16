@@ -311,14 +311,14 @@ $mailQueueStats = $mailQueueStats ?? ['queued' => 0, 'processing' => 0, 'sent' =
                     <span class="badge rounded-pill text-bg-light text-dark border px-3 py-2">
                         <i class="bi bi-person-circle me-1"></i><?= htmlspecialchars((string) ($user['name'] ?? 'Admin')) ?>
                     </span>
-                    <div class="dropdown">
-                        <button class="btn btn-outline-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="bi bi-eye me-2"></i>Preview PDF
-                        </button>
-                        <ul class="dropdown-menu dropdown-menu-end">
-                            <li><a class="dropdown-item" href="<?= htmlspecialchars($previewUrl) ?>" target="_blank"><i class="bi bi-file-earmark-pdf me-2"></i>Detailed (Landscape)</a></li>
-                            <li><a class="dropdown-item" href="<?= htmlspecialchars($previewSummaryUrl) ?>" target="_blank"><i class="bi bi-file-earmark-text me-2"></i>Summary (Portrait)</a></li>
-                        </ul>
+                    <div class="d-flex align-items-center gap-2">
+                        <select class="form-select form-select-sm pdf-layout-selector" style="width: auto;">
+                            <option value="detailed" selected>Detailed (Landscape)</option>
+                            <option value="summary">Summary (Portrait)</option>
+                        </select>
+                        <a class="btn btn-outline-primary pdf-preview-btn" href="<?= htmlspecialchars($previewUrl) ?>" target="_blank">
+                            <i class="bi bi-eye me-2"></i>Preview
+                        </a>
                     </div>
                 </div>
             </div>
@@ -374,24 +374,21 @@ $mailQueueStats = $mailQueueStats ?? ['queued' => 0, 'processing' => 0, 'sent' =
                         <?= number_format($pdfRecordCount) ?> of <?= number_format(count($records)) ?> filtered rows will be used in the PDF<?= $pdfLimitReached ? ' (limit reached)' : '' ?>.
                     </p>
                 </div>
-                <div class="d-flex flex-wrap gap-2">
-                    <div class="dropdown">
-                        <button class="btn btn-outline-primary btn-lg dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="bi bi-eye me-2"></i>Preview PDF
-                        </button>
-                        <ul class="dropdown-menu dropdown-menu-end">
-                            <li><a class="dropdown-item" href="<?= htmlspecialchars($previewUrl) ?>" target="_blank"><i class="bi bi-file-earmark-pdf me-2"></i>Detailed (Landscape)</a></li>
-                            <li><a class="dropdown-item" href="<?= htmlspecialchars($previewSummaryUrl) ?>" target="_blank"><i class="bi bi-file-earmark-text me-2"></i>Summary (Portrait)</a></li>
-                        </ul>
+                <div class="d-flex flex-wrap align-items-center gap-3">
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="small fw-bold text-secondary text-uppercase mb-0 d-none d-sm-inline">Layout:</span>
+                        <select class="form-select pdf-layout-selector" style="width: auto;">
+                            <option value="detailed" selected>Detailed (Landscape)</option>
+                            <option value="summary">Summary (Portrait)</option>
+                        </select>
                     </div>
-                    <div class="dropdown">
-                        <button class="btn btn-primary btn-lg dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <div class="d-flex gap-2">
+                        <a class="btn btn-outline-primary btn-lg pdf-preview-btn" href="<?= htmlspecialchars($previewUrl) ?>" target="_blank">
+                            <i class="bi bi-eye me-2"></i>Preview PDF
+                        </a>
+                        <a class="btn btn-primary btn-lg pdf-download-btn" href="<?= htmlspecialchars($downloadUrl) ?>" target="_blank">
                             <i class="bi bi-file-earmark-pdf me-2"></i>Download
-                        </button>
-                        <ul class="dropdown-menu dropdown-menu-end">
-                            <li><a class="dropdown-item" href="<?= htmlspecialchars($downloadUrl) ?>" target="_blank"><i class="bi bi-file-earmark-pdf me-2"></i>Detailed (Landscape)</a></li>
-                            <li><a class="dropdown-item" href="<?= htmlspecialchars($downloadSummaryUrl) ?>" target="_blank"><i class="bi bi-file-earmark-text me-2"></i>Summary (Portrait)</a></li>
-                        </ul>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -483,25 +480,17 @@ $mailQueueStats = $mailQueueStats ?? ['queued' => 0, 'processing' => 0, 'sent' =
                             The PDF includes <?= $pdfLimitReached ? 'the first ' : 'all ' ?><?= number_format($pdfRecordCount) ?> filtered rows.
                         </p>
                     </div>
-                    <div class="d-flex flex-wrap gap-2">
-                        <div class="dropdown">
-                            <button class="btn btn-outline-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                <i class="bi bi-eye me-2"></i>Preview
-                            </button>
-                            <ul class="dropdown-menu dropdown-menu-end">
-                                <li><a class="dropdown-item" href="<?= htmlspecialchars($previewUrl) ?>" target="_blank"><i class="bi bi-file-earmark-pdf me-2"></i>Detailed (Landscape)</a></li>
-                                <li><a class="dropdown-item" href="<?= htmlspecialchars($previewSummaryUrl) ?>" target="_blank"><i class="bi bi-file-earmark-text me-2"></i>Summary (Portrait)</a></li>
-                            </ul>
-                        </div>
-                        <div class="dropdown">
-                            <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                <i class="bi bi-printer me-2"></i>Print / Download
-                            </button>
-                            <ul class="dropdown-menu dropdown-menu-end">
-                                <li><a class="dropdown-item" href="<?= htmlspecialchars($downloadUrl) ?>" target="_blank"><i class="bi bi-file-earmark-pdf me-2"></i>Detailed (Landscape)</a></li>
-                                <li><a class="dropdown-item" href="<?= htmlspecialchars($downloadSummaryUrl) ?>" target="_blank"><i class="bi bi-file-earmark-text me-2"></i>Summary (Portrait)</a></li>
-                            </ul>
-                        </div>
+                    <div class="d-flex flex-wrap align-items-center gap-2">
+                        <select class="form-select form-select-sm pdf-layout-selector" style="width: auto;">
+                            <option value="detailed" selected>Detailed (Landscape)</option>
+                            <option value="summary">Summary (Portrait)</option>
+                        </select>
+                        <a class="btn btn-outline-primary pdf-preview-btn" href="<?= htmlspecialchars($previewUrl) ?>" target="_blank">
+                            <i class="bi bi-eye me-2"></i>Preview
+                        </a>
+                        <a class="btn btn-primary pdf-download-btn" href="<?= htmlspecialchars($downloadUrl) ?>" target="_blank">
+                            <i class="bi bi-printer me-2"></i>Print / Download
+                        </a>
                     </div>
                 </div>
 
@@ -575,6 +564,33 @@ $mailQueueStats = $mailQueueStats ?? ['queued' => 0, 'processing' => 0, 'sent' =
             </div>
         </section>
     </main>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const selectors = document.querySelectorAll('.pdf-layout-selector');
+    const previewBtns = document.querySelectorAll('.pdf-preview-btn');
+    const downloadBtns = document.querySelectorAll('.pdf-download-btn');
+
+    const detailedPreviewUrl = <?= json_encode($previewUrl) ?>;
+    const summaryPreviewUrl = <?= json_encode($previewSummaryUrl) ?>;
+    const detailedDownloadUrl = <?= json_encode($downloadUrl) ?>;
+    const summaryDownloadUrl = <?= json_encode($downloadSummaryUrl) ?>;
+
+    selectors.forEach(selector => {
+        selector.addEventListener('change', function() {
+            const mode = this.value;
+            
+            // Sync all selectors on the page to show the same selection
+            selectors.forEach(s => s.value = mode);
+
+            const newPreview = mode === 'summary' ? summaryPreviewUrl : detailedPreviewUrl;
+            const newDownload = mode === 'summary' ? summaryDownloadUrl : detailedDownloadUrl;
+
+            previewBtns.forEach(btn => btn.setAttribute('href', newPreview));
+            downloadBtns.forEach(btn => btn.setAttribute('href', newDownload));
+        });
+    });
+});
+</script>
 </div>
 </body>
 </html>
